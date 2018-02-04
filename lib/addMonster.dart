@@ -21,7 +21,8 @@ class AddMonsterModalSheet extends StatelessWidget {
               child: _styledButton(
                 'Add Monster class',
                 buttonPressed: () {
-
+                  Navigator.of(context).pop();
+                  _pushNewPage(context);
                 }
               )
           )]
@@ -83,5 +84,24 @@ class AddMonsterModalSheet extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _pushNewPage(BuildContext context) {
+    Navigator.of(context).push(
+        new MaterialPageRoute<Null>(
+          builder: (BuildContext context) {
+        return new Scaffold(
+          appBar: new AppBar(title: new Text('My Page')),
+          body: new Center(
+            child: new FlatButton(
+              child: new Text('POP'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
+        );
+      },
+    ));
   }
 }

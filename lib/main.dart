@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
+import 'dart:io';
 
 void main() {
   runApp(new BattlehavenApp());
@@ -20,45 +22,147 @@ class InfoScreen extends StatefulWidget {
 }
 
 class InfoScreenState extends State<InfoScreen> {
-  final TextEditingController _textController = new TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-          title: new Text("BattleHaven")
+          title: new Text("BattleHaven"),
+          actions: <Widget>[
+            new Icon(const IconData(0xe3b8, fontFamily: 'MaterialIcons'))
+          ],
       ),
-      body: _buildTextComposer(),
+      body: _buildMonsterList(),
       floatingActionButton: new FloatingActionButton(onPressed: null, child: new Icon(const IconData(0xe145, fontFamily: 'MaterialIcons'))),
     );
   }
 
-
-  Widget _buildTextComposer() {
+  Widget _buildMonsterList() {
     return new Container(
       margin: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: new Row(
+      child: new Column(
         children: <Widget>[
-          new Flexible(
-            child: new TextField(
-              controller: _textController,
-              onSubmitted: _handleSubmitted,
-              decoration: new InputDecoration.collapsed(
-                  hintText: "Send a message"),
-            ),
-          ),
-          new Container(
-            margin: new EdgeInsets.symmetric(horizontal: 4.0),
-            child: new IconButton(
-                icon: new Icon(Icons.send),
-                onPressed: () => _handleSubmitted(_textController.text)),
-          ),
+          new MonsterCard()
         ],
-      ),
+      )
+    );
+  }
+}
+
+class MonsterCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new Card(
+
+      child: new Column(
+        children: <Widget>[
+          new Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              new Image.asset('images/living-bones.jpg', width: 50.0),
+              new Text('Living Bones'),
+              new PaddedText('57')
+            ],
+          ),
+          new MonsterRow(monsterNumber: 1, maxHP: 9)
+        ],
+      )
+    );
+  }
+}
+
+class PaddedText extends StatelessWidget {
+  final double margin;
+  final String content;
+  PaddedText(this.content);
+  
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: new Text(content)
+    );
+  }
+}
+
+class MonsterRow extends StatefulWidget {
+  final int monsterNumber;
+  final int maxHP;
+  MonsterRow({@required this.monsterNumber, @required this.maxHP});
+
+  @override
+  _MonsterRowState createState() => new _MonsterRowState(hp: maxHP);
+}
+
+class _MonsterRowState extends State<MonsterRow> {
+  int hp;
+  List<String> urls = [
+    'images/disarmed-grey.png',
+    'images/immobilized-grey.png',
+    'images/muddled-grey.png',
+    'images/poisoned-grey.png',
+    'images/stunned-grey.png',
+    'images/wound-grey.png'
+  ];
+  _MonsterRowState({@required this.hp});
+
+  @override
+  Widget build(BuildContext context) {
+    return new Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        new PaddedText('${widget.monsterNumber}'),
+        new GestureDetector(
+          onTap: () {
+            _changeStatusIcon(0);
+          },
+          child: new Image.asset(urls[0], width: 35.0, height: 35.0)
+        ),
+        new GestureDetector(
+            onTap: () {
+              _changeStatusIcon(1);
+            },
+            child: new Image.asset(urls[1], width: 35.0, height: 35.0)
+        ),
+        new GestureDetector(
+            onTap: () {
+              _changeStatusIcon(2);
+            },
+            child: new Image.asset(urls[2], width: 35.0, height: 35.0)
+        ),
+        new GestureDetector(
+            onTap: () {
+              _changeStatusIcon(3);
+            },
+            child: new Image.asset(urls[3], width: 35.0, height: 35.0)
+        ),
+        new GestureDetector(
+            onTap: () {
+              _changeStatusIcon(4);
+            },
+            child: new Image.asset(urls[4], width: 35.0, height: 35.0)
+        ),
+        new GestureDetector(
+            onTap: () {
+              _changeStatusIcon(5);
+            },
+            child: new Image.asset(urls[5], width: 35.0, height: 35.0)
+        ),
+        new PaddedText('$hp')
+      ],
     );
   }
 
-  void _handleSubmitted(String text) {
-    _textController.clear();
+  _changeStatusIcon(int iconIndex) {
+    List<String> parts = urls[iconIndex].split('-');
+    String newUrl;
+    if( parts.length > 1 ) {
+      newUrl = '${parts[0]}.png';
+    }
+    else {
+      newUrl = '${parts[0].split('.')[0]}-grey.png';
+    }
+    setState(() {
+      urls[iconIndex] = newUrl;
+    });
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'dart:io';
+import 'addMonster.dart';
 
 void main() {
   runApp(new BattlehavenApp());
@@ -32,7 +33,15 @@ class InfoScreenState extends State<InfoScreen> {
           ],
       ),
       body: _buildMonsterList(),
-      floatingActionButton: new FloatingActionButton(onPressed: null, child: new Icon(const IconData(0xe145, fontFamily: 'MaterialIcons'))),
+      floatingActionButton: new FloatingActionButton(
+          onPressed: () {
+            showModalBottomSheet<Null>(context: context, builder: (BuildContext context)
+            {
+              return new AddMonsterModalSheet();
+            });
+          },
+          child: new Icon(const IconData(0xe145, fontFamily: 'MaterialIcons'))
+      ),
     );
   }
 
